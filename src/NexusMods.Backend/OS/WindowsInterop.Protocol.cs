@@ -37,19 +37,19 @@ internal partial class WindowsInterop
     {
         // https://learn.microsoft.com/en-us/windows/win32/shell/default-programs
 
-        const string capabilitiesPath = @"SOFTWARE\Nexus Mods\NexusMods.App\Capabilities";
+        const string capabilitiesPath = @"SOFTWARE\CaveMods\Capabilities";
 
         using var key = Registry.CurrentUser.CreateSubKey(capabilitiesPath);
-        key.SetValue("ApplicationName", "Nexus Mods App");
+        key.SetValue("ApplicationName", "CaveMods");
         key.SetValue("ApplicationDescription", "Mod Manager for your games");
 
         using var urlAssociationsKey = key.CreateSubKey("UrlAssociations");
         urlAssociationsKey.SetValue(uriScheme, CreateProgId(uriScheme));
 
         using var registeredApplicationsKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\RegisteredApplications");
-        registeredApplicationsKey.SetValue("NexusMods.App", capabilitiesPath);
+        registeredApplicationsKey.SetValue("CaveMods", capabilitiesPath);
 
-        CreateProgIdClass(CreateProgId(uriScheme), $"Nexus Mods App {uriScheme.ToUpperInvariant()} Handler", isProtocolHandler: false);
+        CreateProgIdClass(CreateProgId(uriScheme), $"CaveMods {uriScheme.ToUpperInvariant()} Handler", isProtocolHandler: false);
     }
 
     [SupportedOSPlatform("windows")]
@@ -74,6 +74,6 @@ internal partial class WindowsInterop
     [SupportedOSPlatform("windows")]
     private void SetAsDefaultHandler(string uriScheme)
     {
-        CreateProgIdClass(uriScheme, $"Nexus Mods App {uriScheme.ToUpperInvariant()} Handler", isProtocolHandler: true);
+        CreateProgIdClass(uriScheme, $"CaveMods {uriScheme.ToUpperInvariant()} Handler", isProtocolHandler: true);
     }
 }

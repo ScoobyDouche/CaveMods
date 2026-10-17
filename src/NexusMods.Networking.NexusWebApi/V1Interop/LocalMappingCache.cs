@@ -71,7 +71,10 @@ internal class LocalMappingCache : IGameDomainToGameIdMappingCache
 
             gameIdToDomain = pairs.DistinctBy(tuple => tuple.Id).ToFrozenDictionary(tuple => tuple.Id, tuple => tuple.Domain);
             gameDomainToId = pairs.DistinctBy(tuple => tuple.Domain).ToFrozenDictionary(tuple => tuple.Domain, tuple => tuple.Id);
-            Debug.Assert(gameIdToDomain.Count == gameDomainToId.Count);
+            // NOTE: the upstream games.json can contain multiple games sharing a domain (e.g. "neverwinter")
+            if (gameIdToDomain.Count != gameDomainToId.Count)
+                logger.LogWarning("games.json contains {Count} duplicate game domains", gameIdToDomain.Count - gameDomainToId.Count);
+
             return true;
         }
         catch (Exception e)

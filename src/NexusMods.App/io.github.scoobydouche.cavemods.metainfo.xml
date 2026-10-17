@@ -2,19 +2,19 @@
 <component type="desktop-application">
     <!-- See https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#spec-component-filespec -->
 
-    <id>com.nexusmods.app</id>
+    <id>io.github.scoobydouche.cavemods</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0-only</project_license>
 
-    <name>Nexus Mods App</name>
+    <name>CaveMods</name>
     <summary>Mod Manager for your games</summary>
 
-    <developer id="com.nexusmods">
-        <name>The Nexus Mods Team</name>
+    <developer id="io.github.scoobydouche">
+        <name>ScoobyDouche</name>
     </developer>
 
     <description>
-        <p>The Nexus Mods App is a mod manager for your games and the successor to Vortex with native support for Linux.</p>
+        <p>CaveMods is a mod manager for your games with native support for Linux, based on the Nexus Mods App.</p>
     </description>
 
     <branding>
@@ -22,15 +22,15 @@
         <color type="primary" scheme_preference="dark">#1d1d21</color>
     </branding>
 
-    <launchable type="desktop-id">com.nexusmods.app.desktop</launchable>
+    <launchable type="desktop-id">io.github.scoobydouche.cavemods.desktop</launchable>
 
-    <url type="homepage">https://github.com/Nexus-Mods/NexusMods.App</url>
-    <url type="bugtracker">https://github.com/Nexus-Mods/NexusMods.App/issues</url>
+    <url type="homepage">https://github.com/ScoobyDouche/NexusMods.Linux</url>
+    <url type="bugtracker">https://github.com/ScoobyDouche/NexusMods.Linux/issues</url>
     <url type="faq">https://nexus-mods.github.io/NexusMods.App/users/faq/</url>
     <url type="help">https://nexus-mods.github.io/NexusMods.App/users</url>
     <url type="translate">https://nexus-mods.github.io/NexusMods.App/developers/Contributing/</url>
     <url type="contact">https://discord.gg/ReWTxb93jS</url>
-    <url type="vcs-browser">https://github.com/Nexus-Mods/NexusMods.App</url>
+    <url type="vcs-browser">https://github.com/ScoobyDouche/NexusMods.Linux</url>
     <url type="contribute">https://nexus-mods.github.io/NexusMods.App/developers/Contributing/</url>
 
     <content_rating type="oars-1.0">

@@ -41,8 +41,7 @@ public sealed class JsonStorageBackend : IStorageBackend
             onOSX: () => KnownPath.LocalApplicationDataDirectory
         );
 
-        // NOTE: OSX ".App" is apparently special, using _ instead of . to prevent weirdness
-        var baseDirectoryName = os.IsOSX ? "NexusMods_App/Configs" : "NexusMods.App/Configs";
+        var baseDirectoryName = "CaveMods/Configs";
         return fileSystem.GetKnownPath(baseKnownPath).Combine(baseDirectoryName);
     }
 

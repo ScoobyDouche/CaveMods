@@ -33,14 +33,14 @@ public class CliSettings() : ISettings
     {
         var fs = provider.GetRequiredService<IFileSystem>();
         var directory = fs.OS.MatchPlatform(
-            () => fs.GetKnownPath(KnownPath.LocalApplicationDataDirectory).Combine("NexusMods.App"),
+            () => fs.GetKnownPath(KnownPath.LocalApplicationDataDirectory).Combine("CaveMods"),
             () => fs.GetKnownPath(KnownPath.XDG_RUNTIME_DIR),
-            () => fs.GetKnownPath(KnownPath.ApplicationDataDirectory).Combine("NexusMods_App")
+            () => fs.GetKnownPath(KnownPath.ApplicationDataDirectory).Combine("CaveMods")
         );
 
         return new CliSettings
         {
-            SyncFile = directory.Combine("NexusMods.App-sync_file.sync"),
+            SyncFile = directory.Combine("CaveMods-sync_file.sync"),
         };
     }
 
