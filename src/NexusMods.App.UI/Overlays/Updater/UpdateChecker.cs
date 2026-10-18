@@ -11,7 +11,7 @@ namespace NexusMods.App.UI.Overlays.Updater;
 public class UpdateChecker
 {
     private const string GitHubOrganization = "ScoobyDouche";
-    private const string GitHubRepository = "NexusMods.Linux";
+    private const string GitHubRepository = "CaveMods";
 
     private readonly ILogger _logger;
     private readonly IGitHubApi _gitHubApi;

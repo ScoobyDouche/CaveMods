@@ -24,13 +24,13 @@
 
     <launchable type="desktop-id">io.github.scoobydouche.cavemods.desktop</launchable>
 
-    <url type="homepage">https://github.com/ScoobyDouche/NexusMods.Linux</url>
-    <url type="bugtracker">https://github.com/ScoobyDouche/NexusMods.Linux/issues</url>
+    <url type="homepage">https://github.com/ScoobyDouche/CaveMods</url>
+    <url type="bugtracker">https://github.com/ScoobyDouche/CaveMods/issues</url>
     <url type="faq">https://nexus-mods.github.io/NexusMods.App/users/faq/</url>
     <url type="help">https://nexus-mods.github.io/NexusMods.App/users</url>
     <url type="translate">https://nexus-mods.github.io/NexusMods.App/developers/Contributing/</url>
     <url type="contact">https://discord.gg/ReWTxb93jS</url>
-    <url type="vcs-browser">https://github.com/ScoobyDouche/NexusMods.Linux</url>
+    <url type="vcs-browser">https://github.com/ScoobyDouche/CaveMods</url>
     <url type="contribute">https://nexus-mods.github.io/NexusMods.App/developers/Contributing/</url>
 
     <content_rating type="oars-1.0">
