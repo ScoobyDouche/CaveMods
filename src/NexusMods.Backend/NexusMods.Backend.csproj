@@ -20,6 +20,7 @@
     
     <ItemGroup>
         <EmbeddedResource Include="../NexusMods.App/io.github.scoobydouche.cavemods.desktop" />
+        <EmbeddedResource Include="../NexusMods.App/icon.svg" LogicalName="NexusMods.Backend.icon.svg" />
     </ItemGroup>
 
     <ItemGroup>

@@ -11,6 +11,7 @@ internal partial class LinuxInterop
     private const string ApplicationId = "io.github.scoobydouche.cavemods";
     private const string DesktopFile = $"{ApplicationId}.desktop";
     private const string DesktopFileResourceName = $"NexusMods.Backend.{DesktopFile}";
+    private const string IconResourceName = "NexusMods.Backend.icon.svg";
     private const string ExecuteParameterPlaceholder = "${INSTALL_EXEC}";
     private const string TryExecuteParameterPlaceholder = "${INSTALL_TRYEXEC}";
 
@@ -108,6 +109,32 @@ internal partial class LinuxInterop
         text = text.Replace(TryExecuteParameterPlaceholder, EscapeDesktopFilePath(processPath));
         
         await filePath.WriteAllTextAsync(text, cancellationToken);
+
+        try
+        {
+            await CreateIconFile(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Exception while creating the application icon, the desktop entry will use a generic icon");
+        }
+    }
+
+    /// <summary>
+    /// Installs the app icon under the name referenced by the desktop file's <c>Icon=</c> key,
+    /// so panels and menus that look the icon up from the desktop entry can find it.
+    /// </summary>
+    private async Task CreateIconFile(CancellationToken cancellationToken)
+    {
+        var iconDirectory = _fileSystem.GetKnownPath(KnownPath.XDG_DATA_HOME).Combine("icons/hicolor/scalable/apps");
+        if (!iconDirectory.DirectoryExists()) iconDirectory.CreateDirectory();
+
+        var iconPath = iconDirectory.Combine($"{ApplicationId}.svg");
+        _logger.LogInformation("Creating application icon at `{Path}`", iconPath);
+
+        await using var stream = await new EmbeddedResourceStreamFactory<LinuxInterop>(IconResourceName).GetStreamAsync();
+        await using var fileStream = iconPath.Create();
+        await stream.CopyToAsync(fileStream, cancellationToken);
     }
 
     private async Task<string> CreateWrapperScriptIfNeeded(AbsolutePath applicationsDirectory, string executablePath, CancellationToken cancellationToken = default)
