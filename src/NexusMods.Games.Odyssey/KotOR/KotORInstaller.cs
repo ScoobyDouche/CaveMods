@@ -14,24 +14,17 @@ namespace NexusMods.Games.Odyssey.KotOR;
 
 /// <summary>
 /// Installer for loose-file KotOR mods: files dropped into Override, or archives
-/// that mirror the game folder layout (Override, modules, movies, ...).
+/// containing Override and/or modules folders.
 /// </summary>
 /// <remarks>
+/// Only files that land in <see cref="KotORPaths.IsManaged"/> are installed; anything else in the
+/// archive (source scripts, alternate versions, readmes) is skipped.
 /// TSLPatcher/HoloPatcher mods (with a "tslpatchdata" folder) edit existing game files
 /// and can't be installed by copying, so they are rejected.
 /// </remarks>
 public class KotORInstaller : GenericPatternMatchInstaller
 {
     private static readonly RelativePath TslPatchDataFolder = "tslpatchdata";
-
-    /// <summary>
-    /// Top-level game folders, spelled as the game ships them. Linux file systems are
-    /// case-sensitive, so mod archives using e.g. "Modules" are rewritten to "modules".
-    /// </summary>
-    internal static readonly RelativePath[] GameFolders =
-    [
-        "Override", "modules", "movies", "streammusic", "streamsounds", "streamwaves", "lips", "TexturePacks",
-    ];
 
     private static readonly Extension[] DocumentationExtensions =
     [
@@ -57,18 +50,18 @@ public class KotORInstaller : GenericPatternMatchInstaller
     {
         InstallFolderTargets =
         [
-            // archives that mirror the game folder, e.g. "MyMod/Override/..." or "modules/..."
+            // archives that mirror the game folder, e.g. "MyMod/Override/..." and "MyMod/modules/x.mod"
             new InstallFolderTarget
             {
                 DestinationGamePath = new GamePath(LocationId.Game, ""),
-                Names = GameFolders,
+                Names = [KotORPaths.OverrideFolder, KotORPaths.ModulesFolder],
                 FileExtensionsToDiscard = DocumentationExtensions,
             },
 
             // loose Override files, e.g. "MyMod/N_DarthMalak.tga"
             new InstallFolderTarget
             {
-                DestinationGamePath = new GamePath(LocationId.Game, "Override"),
+                DestinationGamePath = new GamePath(LocationId.Game, KotORPaths.OverrideFolder),
                 KnownValidFileExtensions = OverrideExtensions,
                 FileExtensionsToDiscard = DocumentationExtensions,
             },
@@ -98,24 +91,9 @@ public class KotORInstaller : GenericPatternMatchInstaller
         LoadoutItemGroup.New loadoutGroup,
         KeyedBox<RelativePath, LibraryArchiveTree> fileNode)
     {
-        base.GenerateFileItem(target, transaction, loadout, NormalizeGameFolder(relativePath), loadoutGroup, fileNode);
-    }
+        var normalized = KotORPaths.NormalizeTopFolder(relativePath);
+        if (!KotORPaths.IsManaged(new GamePath(target.DestinationGamePath.LocationId, normalized))) return;
 
-    /// <summary>
-    /// Rewrites the first folder of <paramref name="path"/> to the game's own spelling.
-    /// </summary>
-    internal static RelativePath NormalizeGameFolder(RelativePath path)
-    {
-        var parts = path.Parts.ToArray();
-        if (parts.Length < 2) return path;
-
-        var topFolder = parts[0];
-        foreach (var gameFolder in GameFolders)
-        {
-            if (!gameFolder.Equals(topFolder)) continue;
-            return gameFolder.Join(path.DropFirst(1));
-        }
-
-        return path;
+        base.GenerateFileItem(target, transaction, loadout, normalized, loadoutGroup, fileNode);
     }
 }

@@ -6,6 +6,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="NexusMods.Games.Odyssey.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Remove="Resources\KotOR\thumbnail.webp" />
       <EmbeddedResource Include="Resources\KotOR\thumbnail.webp" />
       <None Remove="Resources\KotOR\tile.webp" />

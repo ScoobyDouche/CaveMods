@@ -38,7 +38,7 @@ public class KotOR1 : IGame, IGameData<KotOR1>
 
     public KotOR1(IServiceProvider provider)
     {
-        _synchronizer = new Lazy<ILoadoutSynchronizer>(() => new DefaultSynchronizer(provider));
+        _synchronizer = new Lazy<ILoadoutSynchronizer>(() => new KotORSynchronizer(provider));
         _sortOrderManager = new Lazy<ISortOrderManager>(() =>
         {
             var sortOrderManager = provider.GetRequiredService<SortOrderManager>();

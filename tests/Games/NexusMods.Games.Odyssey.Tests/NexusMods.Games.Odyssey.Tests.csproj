@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\NexusMods.Games.Odyssey\NexusMods.Games.Odyssey.csproj" />
+  </ItemGroup>
+</Project>
