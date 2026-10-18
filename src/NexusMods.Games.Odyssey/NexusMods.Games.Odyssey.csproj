@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\NexusMods.Abstractions.Games\NexusMods.Abstractions.Games.csproj" />
+        <ProjectReference Include="..\NexusMods.Games.Generic\NexusMods.Games.Generic.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\KotOR\thumbnail.webp" />
+      <EmbeddedResource Include="Resources\KotOR\thumbnail.webp" />
+      <None Remove="Resources\KotOR\tile.webp" />
+      <EmbeddedResource Include="Resources\KotOR\tile.webp" />
+    </ItemGroup>
+
+</Project>

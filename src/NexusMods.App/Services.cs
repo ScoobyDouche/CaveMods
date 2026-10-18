@@ -142,6 +142,7 @@ public static class Services
         Games.Larian.BaldursGate3.Services.AddBaldursGate3(services);
         Games.CreationEngine.Services.AddCreationEngine(services);
         Games.MountAndBlade2Bannerlord.Services.AddMountAndBlade2Bannerlord(services);
+        Games.Odyssey.Services.AddOdysseyGames(services);
         return services;
     }
 }
