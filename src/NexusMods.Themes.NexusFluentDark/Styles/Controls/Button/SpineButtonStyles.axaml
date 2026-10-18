@@ -84,8 +84,8 @@
         </Style>
 
         <Style Selector="^.Home /template/ icons|UnifiedIcon#Icon">
-            <Setter Property="Value" Value="{x:Static icons:IconValues.Nexus}" />
-            <Setter Property="Size" Value="28" />
+            <Setter Property="Value" Value="{x:Static icons:IconValues.CaveMods}" />
+            <Setter Property="Size" Value="36" />
         </Style>
 
         <Style Selector="^.Inactive icons|UnifiedIcon#Icon">

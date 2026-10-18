@@ -89,7 +89,7 @@
                         <controls:ComponentControl.Fallback>
                             <Border x:Name="FallbackBorder">
                                 <icons:UnifiedIcon x:Name="FallbackIcon"
-                                                   Value="{x:Static icons:IconValues.Nexus}" />
+                                                   Value="{x:Static icons:IconValues.CaveMods}" />
                             </Border>
                         </controls:ComponentControl.Fallback>
                     </controls:ComponentControl>

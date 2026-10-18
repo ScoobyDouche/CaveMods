@@ -700,6 +700,11 @@ public static class IconValues
     /// Brand pictogram for Health
     /// </summary>
     public static readonly IconValue NexusColor = new AvaloniaSvg("avares://NexusMods.App.UI/Assets/nexus-logo.svg");
+
+    /// <summary>
+    /// The CaveMods app logo.
+    /// </summary>
+    public static readonly IconValue CaveMods = new AvaloniaSvg("avares://NexusMods.App.UI/Assets/cavemods.svg");
     
     /// <summary>
     /// Brand pictogram for Health
