@@ -22,7 +22,7 @@ namespace NexusMods.Games.Odyssey.KotOR;
 /// TSLPatcher/HoloPatcher mods (with a "tslpatchdata" folder) edit existing game files
 /// and can't be installed by copying, so they are rejected.
 /// </remarks>
-public class KotORInstaller : GenericPatternMatchInstaller
+internal class KotORInstaller : GenericPatternMatchInstaller
 {
     private static readonly RelativePath TslPatchDataFolder = "tslpatchdata";
 
@@ -46,22 +46,25 @@ public class KotORInstaller : GenericPatternMatchInstaller
         new(".wav"),
     ];
 
-    public KotORInstaller(IServiceProvider serviceProvider) : base(serviceProvider)
+    private readonly KotORPaths _paths;
+
+    public KotORInstaller(IServiceProvider serviceProvider, KotORPaths paths) : base(serviceProvider)
     {
+        _paths = paths;
         InstallFolderTargets =
         [
             // archives that mirror the game folder, e.g. "MyMod/Override/..." and "MyMod/modules/x.mod"
             new InstallFolderTarget
             {
-                DestinationGamePath = new GamePath(LocationId.Game, ""),
-                Names = [KotORPaths.OverrideFolder, KotORPaths.ModulesFolder],
+                DestinationGamePath = new GamePath(LocationId.Game, paths.DataFolder),
+                Names = [paths.OverrideFolder, KotORPaths.ModulesFolder],
                 FileExtensionsToDiscard = DocumentationExtensions,
             },
 
             // loose Override files, e.g. "MyMod/N_DarthMalak.tga"
             new InstallFolderTarget
             {
-                DestinationGamePath = new GamePath(LocationId.Game, KotORPaths.OverrideFolder),
+                DestinationGamePath = new GamePath(LocationId.Game, paths.OverridePath),
                 KnownValidFileExtensions = OverrideExtensions,
                 FileExtensionsToDiscard = DocumentationExtensions,
             },
@@ -91,8 +94,8 @@ public class KotORInstaller : GenericPatternMatchInstaller
         LoadoutItemGroup.New loadoutGroup,
         KeyedBox<RelativePath, LibraryArchiveTree> fileNode)
     {
-        var normalized = KotORPaths.NormalizeTopFolder(relativePath);
-        if (!KotORPaths.IsManaged(new GamePath(target.DestinationGamePath.LocationId, normalized))) return;
+        var normalized = _paths.Normalize(relativePath);
+        if (!_paths.IsManaged(new GamePath(target.DestinationGamePath.LocationId, normalized))) return;
 
         base.GenerateFileItem(target, transaction, loadout, normalized, loadoutGroup, fileNode);
     }

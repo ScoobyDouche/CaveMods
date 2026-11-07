@@ -38,7 +38,7 @@ public class KotOR1 : IGame, IGameData<KotOR1>
 
     public KotOR1(IServiceProvider provider)
     {
-        _synchronizer = new Lazy<ILoadoutSynchronizer>(() => new KotORSynchronizer(provider));
+        _synchronizer = new Lazy<ILoadoutSynchronizer>(() => new KotORSynchronizer(provider, KotORPaths.KotOR1));
         _sortOrderManager = new Lazy<ISortOrderManager>(() =>
         {
             var sortOrderManager = provider.GetRequiredService<SortOrderManager>();
@@ -46,7 +46,7 @@ public class KotOR1 : IGame, IGameData<KotOR1>
             return sortOrderManager;
         });
 
-        LibraryItemInstallers = [new KotORInstaller(provider)];
+        LibraryItemInstallers = [new KotORInstaller(provider, KotORPaths.KotOR1)];
     }
 
     public ImmutableDictionary<LocationId, AbsolutePath> GetLocations(IFileSystem fileSystem, GameLocatorResult gameLocatorResult)

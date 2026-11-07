@@ -14,6 +14,10 @@
       <EmbeddedResource Include="Resources\KotOR\thumbnail.webp" />
       <None Remove="Resources\KotOR\tile.webp" />
       <EmbeddedResource Include="Resources\KotOR\tile.webp" />
+      <None Remove="Resources\KotOR2\thumbnail.webp" />
+      <EmbeddedResource Include="Resources\KotOR2\thumbnail.webp" />
+      <None Remove="Resources\KotOR2\tile.webp" />
+      <EmbeddedResource Include="Resources\KotOR2\tile.webp" />
     </ItemGroup>
 
 </Project>

@@ -11,7 +11,9 @@ public static class Services
     {
         services
             .AddGame<KotOR1>()
-            .AddSingleton<ITool, RunGameTool<KotOR1>>();
+            .AddSingleton<ITool, RunGameTool<KotOR1>>()
+            .AddGame<KotOR2>()
+            .AddSingleton<ITool, RunGameTool<KotOR2>>();
 
         return services;
     }
