@@ -9,19 +9,11 @@ public class BaldursGate3Settings : ISettings
     /// the loadout may become invalid. If mods are installed into this folder via the app they
     /// will still be backed up as needed
     /// </summary>
-    public bool DoFullGameBackup { get; set; } = false;
+    // CaveMods removed the full game backup option: it is always off.
+    public bool DoFullGameBackup { get => false; set { } }
     
     public static ISettingsBuilder Configure(ISettingsBuilder settingsBuilder)
     {
-        return settingsBuilder.ConfigureProperty(
-            x => x.DoFullGameBackup,
-            new PropertyOptions<BaldursGate3Settings, bool>
-            {
-                Section = Sections.Experimental,
-                DisplayName = "Full game backup: Baldur's Gate 3",
-                DescriptionFactory = _ => "Backup all game folders, this will greatly increase disk space usage. Should only be changed before managing the game.",
-            },
-            new BooleanContainerOptions()
-        );
+        return settingsBuilder;
     }
 }

@@ -22,7 +22,8 @@
         <Grid RowDefinitions="Auto,Auto,Auto">
             
             <!-- image -->
-            <Border Grid.Row="0" x:Name="ImageSectionBorder" Margin="0 0 0 12">
+            <!-- clicking the image of a managed game opens its mods (replaces the old "View" button) -->
+            <Border Grid.Row="0" x:Name="ImageSectionBorder" Margin="0 0 0 12" Background="Transparent">
                 <Grid RowDefinitions="Auto" x:Name="ImageGrid">
                     <Image Grid.Row="0" x:Name="GameImage" />
                     <Border Grid.Row="0"
@@ -71,14 +72,6 @@
                       IsVisible="False"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Stretch">
-                    <controls:StandardButton x:Name="ViewGameButton"
-                                             Text="{x:Static resources:Language.GameWidget__View}"
-                                             LeftIcon="{x:Static icons:IconValues.Check}"
-                                             ShowIcon="Left"
-                                             Type="Tertiary"
-                                             Fill="Weak"
-                                             HorizontalAlignment="Stretch" />
-
                     <controls:StandardButton Grid.Column="2" x:Name="RemoveGameButton"
                                              LeftIcon="{x:Static icons:IconValues.DeleteForever}"
                                              ShowLabel="False"

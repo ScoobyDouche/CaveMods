@@ -50,9 +50,6 @@ public partial class TopBarView : ReactiveUserControl<ITopBarViewModel>
                 this.BindCommand(ViewModel, vm => vm.ShowWelcomeMessageCommand, view => view.ShowWelcomeMessageMenuItem)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.OpenDiscordCommand, view => view.OpenDiscordMenuItem)
-                    .DisposeWith(d);
-
                 this.BindCommand(ViewModel, vm => vm.OpenForumsCommand, view => view.OpenForumsMenuItem)
                     .DisposeWith(d);
 

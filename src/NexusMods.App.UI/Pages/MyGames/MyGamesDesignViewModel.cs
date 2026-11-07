@@ -34,7 +34,6 @@ public class MyGamesDesignViewModel : APageViewModel<IMyGamesViewModel>, IMyGame
             [
                 new MiniGameWidgetDesignViewModel(),
                 new MiniGameWidgetDesignViewModel(),
-                new ComingSoonMiniGameWidgetViewModelDesignViewModel(),
             ]
         );
     }

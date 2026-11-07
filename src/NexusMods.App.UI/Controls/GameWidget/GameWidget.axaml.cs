@@ -1,5 +1,6 @@
 using System.Reactive.Disposables;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.ReactiveUI;
 using NexusMods.App.UI.Extensions;
 using ReactiveUI;
@@ -13,6 +14,7 @@ public partial class GameWidget : ReactiveUserControl<IGameWidgetViewModel>
     public GameWidget()
     {
         InitializeComponent();
+        ImageSectionBorder.PointerReleased += OnImagePointerReleased;
 
         this.WhenActivated(d =>
             {
@@ -23,6 +25,8 @@ public partial class GameWidget : ReactiveUserControl<IGameWidgetViewModel>
                             AddingGameStackPanel.IsVisible = state == GameWidgetState.AddingGame;
                             ManagedGameGrid.IsVisible = state == GameWidgetState.ManagedGame;
                             RemovingGameStackPanel.IsVisible = state == GameWidgetState.RemovingGame;
+                            ImageSectionBorder.Cursor = state == GameWidgetState.ManagedGame ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+                            ToolTip.SetTip(ImageSectionBorder, state == GameWidgetState.ManagedGame ? "View mods" : null);
                             GameWidgetBorder.Classes.ToggleIf("Disabled", state is GameWidgetState.AddingGame or GameWidgetState.RemovingGame);
                         }
                     )
@@ -61,9 +65,16 @@ public partial class GameWidget : ReactiveUserControl<IGameWidgetViewModel>
                 this.BindCommand(ViewModel, vm => vm.RemoveAllLoadoutsCommand, v => v.RemoveGameButton)
                     .DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.ViewGameCommand, v => v.ViewGameButton)
-                    .DisposeWith(d);
             }
         );
+    }
+
+    private void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (e.InitialPressMouseButton != MouseButton.Left) return;
+        if (ViewModel is not { State: GameWidgetState.ManagedGame } vm) return;
+
+        e.Handled = true;
+        vm.ViewGameCommand.Execute().Subscribe();
     }
 }

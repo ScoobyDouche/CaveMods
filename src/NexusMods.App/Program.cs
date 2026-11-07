@@ -54,10 +54,12 @@ public class Program
         using (var settingsHost = BuildSettingsHost())
         {
             var settingsManager = settingsHost.Services.GetRequiredService<ISettingsManager>();
-            trackingSettings = settingsManager.Get<TrackingSettings>();
+            // CaveMods never sends usage or crash data to Nexus Mods.
+            trackingSettings = settingsManager.Get<TrackingSettings>() with { EnableTracking = false };
             loggingSettings = settingsManager.Get<LoggingSettings>();
             experimentalSettings = settingsManager.Get<ExperimentalSettings>();
-            gameLocatorSettings = settingsManager.Get<GameLocatorSettings>();
+            // Xbox Game Pass support is removed in CaveMods (it only ever worked on Windows).
+            gameLocatorSettings = settingsManager.Get<GameLocatorSettings>() with { EnableXboxGamePass = false };
         }
 
         var startupMode = StartupMode.Parse(args);
