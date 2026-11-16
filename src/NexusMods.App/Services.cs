@@ -143,6 +143,7 @@ public static class Services
         Games.CreationEngine.Services.AddCreationEngine(services);
         Games.MountAndBlade2Bannerlord.Services.AddMountAndBlade2Bannerlord(services);
         Games.Odyssey.Services.AddOdysseyGames(services);
+        Games.KingdomHearts.Services.AddKingdomHeartsGames(services);
         return services;
     }
 }

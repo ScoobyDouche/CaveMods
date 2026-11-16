@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\NexusMods.Abstractions.Games\NexusMods.Abstractions.Games.csproj" />
+        <ProjectReference Include="..\NexusMods.Games.Generic\NexusMods.Games.Generic.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="NexusMods.Games.KingdomHearts.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\KingdomHearts3\thumbnail.webp" />
+      <EmbeddedResource Include="Resources\KingdomHearts3\thumbnail.webp" />
+      <None Remove="Resources\KingdomHearts3\tile.webp" />
+      <EmbeddedResource Include="Resources\KingdomHearts3\tile.webp" />
+      <None Remove="Resources\KingdomHearts02\thumbnail.webp" />
+      <EmbeddedResource Include="Resources\KingdomHearts02\thumbnail.webp" />
+      <None Remove="Resources\KingdomHearts02\tile.webp" />
+      <EmbeddedResource Include="Resources\KingdomHearts02\tile.webp" />
+    </ItemGroup>
+
+</Project>
