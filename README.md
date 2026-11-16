@@ -1,18 +1,61 @@
 <div align="center">
 	<h1>CaveMods</h1>
-	<img src="https://github.com/Nexus-Mods/NexusMods.MkDocsMaterial.Themes.Next/blob/2b49cf1fdd0f15684c6057259b52210e73705b98/Images/Nexus-Icon.png?raw=true" width="150" align="center" />
-	<br/> <br/>
-    Mod With Confidence
-    <br/>
-    The <i>future</i> of modding with <i>Nexus Mods</i>.
-    <br/><br/>
-    <a href="https://github.com/Nexus-Mods/NexusMods.App/actions/workflows/clean_environment_tests.yaml" target="_blank"><img src="https://github.com/Nexus-Mods/NexusMods.App/actions/workflows/clean_environment_tests.yaml/badge.svg" alt="CI Tests"></a>
-    <a href="https://discord.gg/ReWTxb93jS" target="_blank"><img src="https://img.shields.io/discord/1134149061080002713?logo=discord&logoColor=white&color=7289da" alt="Discord"></a>
+	<img src="src/NexusMods.App/icon.svg" width="150" alt="CaveMods logo" />
+	<br/><br/>
+	A Linux mod manager for games the official tools leave behind.
+	<br/><br/>
+	<a href="https://github.com/ScoobyDouche/CaveMods/releases/latest"><img src="https://img.shields.io/github/v/release/ScoobyDouche/CaveMods?label=download" alt="Latest release"></a>
+	<a href="LICENSE.md"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License: GPL-3.0"></a>
 </div>
 
-CaveMods is a mod installer, creator and manager for all your popular games, forked from the [Nexus Mods app](https://github.com/Nexus-Mods/NexusMods.App) with a focus on Linux and extra game support.
+CaveMods is a fork of the [Nexus Mods App](https://github.com/Nexus-Mods/NexusMods.App) built for Linux. It adds games the official app doesn't support and handles the things that make modding on Linux painful: case-sensitive file names, native Linux ports with odd folder layouts, and Windows games running through Proton.
 
-Easy to use, runs on your standard Windows PC and Linux alike. Don't waste time troubleshooting, play your games,
-fill those knees with arrows and most importantly, ***Have Fun***!
+Download mods from Nexus Mods with one click, turn them on and off, and CaveMods puts the files where the game expects them.
 
-Learn more about the App on the [Wiki](https://nexus-mods.github.io/NexusMods.App/)
+## Supported games
+
+| Game | Store | Build | What CaveMods manages |
+|---|---|---|---|
+| Star Wars: Knights of the Old Republic | Steam, GOG | Windows (Proton) | `Override/` and `modules/*.mod` |
+| Star Wars: Knights of the Old Republic II | Steam | Native Linux (Aspyr) | `steamassets/override/` and `steamassets/modules/*.mod`, file names lower-cased so the Linux port finds them |
+| Kingdom Hearts III + Re Mind | Steam | Windows (Proton) | `.pak` mods in `Content/Paks/~mods` |
+| Kingdom Hearts 0.2 Birth by Sleep | Steam (HD 2.8 collection) | Windows (Proton) | `.pak` mods in `Content/Paks/~mods` |
+
+The games the Nexus Mods App already supports (Stardew Valley, Cyberpunk 2077, Baldur's Gate 3, Mount & Blade II: Bannerlord, Skyrim Special Edition and Fallout 4) are still included.
+
+CaveMods only ever touches the mod folders listed above, never the game's own files.
+
+### Not supported
+
+- **TSLPatcher / HoloPatcher mods for KotOR.** They edit game files instead of adding new ones. Install them with HoloPatcher.
+- **Mods distributed as `.exe` installers.** CaveMods can only unpack zip, 7z and rar archives.
+- **Kingdom Hearts 1.5+2.5 ReMIX and Dream Drop Distance.** Their mods need OpenKH Mods Manager.
+- **UE4SS / LogicMods mods for Kingdom Hearts III.**
+
+## Install
+
+1. Download `CaveMods-<version>-x86_64.AppImage` from the [latest release](https://github.com/ScoobyDouche/CaveMods/releases/latest).
+2. Make it executable: `chmod +x CaveMods-*-x86_64.AppImage`
+3. Run it, and log in with your Nexus Mods account to download mods.
+
+CaveMods finds games installed through Steam, including extra Steam library folders on other drives.
+
+## Building from source
+
+You need the [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0).
+
+```bash
+git clone --recurse-submodules https://github.com/ScoobyDouche/CaveMods.git
+cd CaveMods
+dotnet run --project src/NexusMods.App/NexusMods.App.csproj
+```
+
+## Reporting problems
+
+Open an [issue](https://github.com/ScoobyDouche/CaveMods/issues), or use the **Send Issue** button in the app. Logs are in `~/.local/state/CaveMods/Logs`.
+
+## Credits and license
+
+CaveMods is based on the [Nexus Mods App](https://github.com/Nexus-Mods/NexusMods.App) by Nexus Mods and its contributors. It is an unofficial fork and is not affiliated with or endorsed by Nexus Mods.
+
+Licensed under the [GNU General Public License v3.0](LICENSE.md).
