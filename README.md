@@ -20,10 +20,14 @@ Download mods from Nexus Mods with one click, turn them on and off, and CaveMods
 | Star Wars: Knights of the Old Republic II | Steam | Native Linux (Aspyr) | `steamassets/override/` and `steamassets/modules/*.mod`, file names lower-cased so the Linux port finds them |
 | Kingdom Hearts III + Re Mind | Steam | Windows (Proton) | `.pak` mods in `Content/Paks/~mods` |
 | Kingdom Hearts 0.2 Birth by Sleep | Steam (HD 2.8 collection) | Windows (Proton) | `.pak` mods in `Content/Paks/~mods` |
+| Fallout 3 (incl. GOTY) | Steam | Windows (Proton) | `Data/` files, FOMOD installers, FOSE, `plugins.txt` and timestamp load order |
+| Fallout: New Vegas | Steam | Windows (Proton) | `Data/` files, FOMOD installers, xNVSE, `plugins.txt` and timestamp load order |
 
 The games the Nexus Mods App already supports (Stardew Valley, Cyberpunk 2077, Baldur's Gate 3, Mount & Blade II: Bannerlord, Skyrim Special Edition and Fallout 4) are still included.
 
-CaveMods only ever touches the mod folders listed above, never the game's own files.
+CaveMods only ever touches the mod folders listed above and never changes the contents of the game's own files.
+
+Fallout 3 and New Vegas load plugins oldest-file-first rather than in `plugins.txt` order, so for those two games CaveMods sets the modification dates of the plugin files (including the official DLC `.esm` files) to apply the load order. Only the dates change.
 
 ### Not supported
 

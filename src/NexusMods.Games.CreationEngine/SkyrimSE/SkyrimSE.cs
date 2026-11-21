@@ -96,7 +96,7 @@ public class SkyrimSE : ICreationEngineGame, IGameData<SkyrimSE>
     public GamePath GetPrimaryFile(GameInstallation installation) => new(LocationId.Game, "SkyrimSE.exe");
 
     private static readonly GroupMask EmptyGroupMask = new(false);
-    public async ValueTask<IMod?> ParsePlugin(Hash hash, RelativePath? name = null)
+    public async ValueTask<PluginHeader?> ParsePlugin(Hash hash, RelativePath? name = null)
     {
         var fileName = name?.FileName.ToString() ?? "unknown.esm";
         var key = ModKey.FromFileName(fileName);
@@ -104,7 +104,7 @@ public class SkyrimSE : ICreationEngineGame, IGameData<SkyrimSE>
         var meta = ParsingMeta.Factory(BinaryReadParameters.Default, GameRelease.SkyrimSE, key, stream!);
         await using var mutagenStream = new MutagenBinaryReadStream(stream!, meta);
         using var frame = new MutagenFrame(mutagenStream);
-        return SkyrimMod.CreateFromBinary(frame, SkyrimRelease.SkyrimSE, EmptyGroupMask);
+        return PluginHeader.FromMutagen(SkyrimMod.CreateFromBinary(frame, SkyrimRelease.SkyrimSE, EmptyGroupMask));
     }
 
     public GamePath PluginsFile => new(LocationId.AppData, "Plugins.txt");

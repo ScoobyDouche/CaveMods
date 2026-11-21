@@ -60,5 +60,29 @@ To fix this, you’ll need to install the missing master before playing.
         )
         .Finish();
 
-  
+    [DiagnosticTemplate]
+    [UsedImplicitly]
+    internal static IDiagnosticTemplate ArchiveInvalidationDisabled = DiagnosticTemplateBuilder
+        .Start()
+        .WithId(new DiagnosticId(Source, number: 3))
+        .WithTitle("Loose texture and mesh mods are ignored")
+        .WithSeverity(DiagnosticSeverity.Warning)
+        .WithSummary("Archive invalidation is off, so the game will ignore installed texture and mesh replacers")
+        .WithDetails("""
+Some of your mods replace textures or meshes with loose files. Fallout 3 and New Vegas only use loose files over the
+ones packed in the game's BSA archives when **archive invalidation** is turned on, which it currently isn't.
+
+To fix this, open **{IniFile}** in a text editor and make sure the `[Archive]` section contains:
+
+```
+bInvalidateOlderFiles=1
+SInvalidationFile=
+```
+
+If the file doesn't exist yet, launch the game once from Steam so it gets created, then edit it.
+""")
+        .WithMessageData(messageBuilder => messageBuilder
+            .AddValue<string>("IniFile")
+        )
+        .Finish();
 }

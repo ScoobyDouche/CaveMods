@@ -100,7 +100,7 @@ public class Fallout4 : ICreationEngineGame, IGameData<Fallout4>
     public GamePath GetPrimaryFile(GameInstallation installation) => new(LocationId.Game, "Fallout4.exe");
 
     private static readonly GroupMask EmptyGroupMask = new(false);
-    public async ValueTask<IMod?> ParsePlugin(Hash hash, RelativePath? name = null)
+    public async ValueTask<PluginHeader?> ParsePlugin(Hash hash, RelativePath? name = null)
     {
         var fileName = name?.FileName.ToString() ?? "unknown.esm";
         var key = ModKey.FromFileName(fileName);
@@ -108,7 +108,7 @@ public class Fallout4 : ICreationEngineGame, IGameData<Fallout4>
         var meta = ParsingMeta.Factory(BinaryReadParameters.Default, GameRelease.Fallout4, key, stream!);
         await using var mutagenStream = new MutagenBinaryReadStream(stream!, meta);
         using var frame = new MutagenFrame(mutagenStream);
-        return Fallout4Mod.CreateFromBinary(frame, Fallout4Release.Fallout4, EmptyGroupMask);
+        return PluginHeader.FromMutagen(Fallout4Mod.CreateFromBinary(frame, Fallout4Release.Fallout4, EmptyGroupMask));
     }
 
     public GamePath PluginsFile => Fallout4KnownPaths.PluginsFile;

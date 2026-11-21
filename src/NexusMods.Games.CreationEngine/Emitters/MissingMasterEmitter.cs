@@ -36,7 +36,8 @@ public class MissingMasterEmitter : ILoadoutDiagnosticEmitter
             node.Key.Parent == KnownPaths.Data);
         
         // Index the plugins in the loadout
-        Dictionary<string, LoadoutItemGroup.ReadOnly> pluginsInLoadout = new();
+        // Plugin file names are case-insensitive, and master references often differ in case from the file on disk
+        Dictionary<string, LoadoutItemGroup.ReadOnly> pluginsInLoadout = new(StringComparer.OrdinalIgnoreCase);
         foreach (var item in LoadoutItem.FindByLoadout(loadout.Db, loadout).OfTypeLoadoutItemWithTargetPath())
         {
             var path = (GamePath)item.TargetPath;
@@ -46,7 +47,7 @@ public class MissingMasterEmitter : ILoadoutDiagnosticEmitter
         }
 
         // Index the plugins that will be on-disk in the game folder
-        Dictionary<ModKey, (SyncNode Node, IMod Header)> pluginHeaders = new();
+        Dictionary<ModKey, (SyncNode Node, PluginHeader Header)> pluginHeaders = new();
         foreach (var (key, node) in plugins)
         {
             var header = await _game.ParsePlugin(node.Loadout.Hash, key.Path.FileName);
@@ -58,14 +59,14 @@ public class MissingMasterEmitter : ILoadoutDiagnosticEmitter
         // For each on-disk plugin, check if it has all the required masters
         foreach (var header in pluginHeaders)
         {
-            foreach (var master in header.Value.Header.MasterReferences)
+            foreach (var master in header.Value.Header.Masters)
             {
                 // If the master is already in the loadout, skip it
-                if (pluginHeaders.ContainsKey(master.Master))
+                if (pluginHeaders.ContainsKey(master))
                     continue;
 
                 // If the master is disabled, emit a diagnostic
-                if (pluginsInLoadout.TryGetValue(master.Master.FileName, out var disabled))
+                if (pluginsInLoadout.TryGetValue(master.FileName, out var disabled))
                 {
                     yield return Diagnostics.CreateMissingMasterIsDisabled(
                         new LoadoutItemGroupReference()
@@ -74,7 +75,7 @@ public class MissingMasterEmitter : ILoadoutDiagnosticEmitter
                             DataId = header.Value.Node.Loadout.EntityId
                         },
                         header.Key,
-                        master.Master,
+                        master,
                         new LoadoutItemGroupReference()
                             {
                                 TxId = loadout.Db.BasisTxId,
@@ -92,7 +93,7 @@ public class MissingMasterEmitter : ILoadoutDiagnosticEmitter
                             DataId = header.Value.Node.Loadout.EntityId
                         },
                         header.Key,
-                        master.Master
+                        master
                     );
                 }
             }
