@@ -1,3 +1,5 @@
+using NexusMods.Sdk.Games;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -25,13 +27,15 @@ public class MyLoadoutsViewModel : APageViewModel<IMyLoadoutsViewModel>, IMyLoad
         IConnection conn,
         IServiceProvider serviceProvider) : base(windowManager)
     {
+        var gameRegistry = serviceProvider.GetRequiredService<IGameRegistry>();
         TabTitle = Language.MyLoadoutsPageTitle;
         TabIcon = IconValues.Package;
         
         this.WhenActivated(d =>
         {
             Loadout.ObserveAll(conn)
-                .Filter(l => l.IsVisible())
+                // loadouts for games that are no longer installed are listed on the My Games page
+                .Filter(l => l.IsVisible() && gameRegistry.TryGetGameInstallation(l, out _))
                 .DistinctValues(loadout => loadout.InstallationInstance)
                 .Transform(managedGameInstall =>
                     {

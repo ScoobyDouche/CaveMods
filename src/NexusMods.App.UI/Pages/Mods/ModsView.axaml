@@ -1,0 +1,90 @@
+<reactiveUi:ReactiveUserControl
+    d:DesignHeight="700"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="NexusMods.App.UI.Pages.Mods.ModsView"
+    x:TypeArguments="mods:IModsViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mods="clr-namespace:NexusMods.App.UI.Pages.Mods"
+    xmlns:pageHeader="clr-namespace:NexusMods.App.UI.Controls.PageHeader"
+    xmlns:icons="clr-namespace:NexusMods.UI.Sdk.Icons;assembly=NexusMods.UI.Sdk">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="ModGroupTemplate" DataType="mods:ModGroup">
+            <Expander IsExpanded="{CompiledBinding IsExpanded, Mode=TwoWay}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,0,0,8">
+                <Expander.Header>
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                        <TextBlock Grid.Column="0" Text="{CompiledBinding Title}"
+                                   Theme="{StaticResource BodyLGBoldTheme}"
+                                   Foreground="{StaticResource NeutralStrongBrush}"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{CompiledBinding CountText}"
+                                   Theme="{StaticResource BodySMNormalTheme}"
+                                   Foreground="{StaticResource NeutralSubduedBrush}"
+                                   VerticalAlignment="Center" />
+                        <Button Grid.Column="2"
+                                IsVisible="{CompiledBinding HasAction}"
+                                Content="{CompiledBinding ActionText}"
+                                Command="{CompiledBinding Action}" />
+                    </Grid>
+                </Expander.Header>
+                <ItemsControl ItemsSource="{CompiledBinding Mods}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="mods:ModEntry">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" Margin="8,4">
+                                <TextBlock Grid.Column="0" Text="{CompiledBinding Name}"
+                                           Theme="{StaticResource BodyMDNormalTheme}"
+                                           Foreground="{StaticResource NeutralStrongBrush}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{CompiledBinding Detail}"
+                                           Theme="{StaticResource BodySMNormalTheme}"
+                                           Foreground="{StaticResource NeutralSubduedBrush}"
+                                           VerticalAlignment="Center" />
+                                <Button Grid.Column="2"
+                                        IsVisible="{CompiledBinding HasAction}"
+                                        Content="{CompiledBinding ActionText}"
+                                        Command="{CompiledBinding Action}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Expander>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <DockPanel Margin="24">
+        <pageHeader:PageHeader DockPanel.Dock="Top"
+                               Title="Mods"
+                               Description="Everything you've downloaded, and everything installed in your loadouts, across all games."
+                               Icon="{x:Static icons:IconValues.ModLibrary}"
+                               Margin="0,0,0,16" />
+
+        <TabControl>
+            <TabItem Header="Downloaded">
+                <ScrollViewer>
+                    <StackPanel Margin="0,12,0,0">
+                        <TextBlock x:Name="DownloadedEmpty" Text="No downloaded mods."
+                                   Theme="{StaticResource BodyMDNormalTheme}"
+                                   Foreground="{StaticResource NeutralSubduedBrush}" />
+                        <ItemsControl x:Name="DownloadedItemsControl" ItemTemplate="{StaticResource ModGroupTemplate}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Installed">
+                <ScrollViewer>
+                    <StackPanel Margin="0,12,0,0">
+                        <TextBlock x:Name="InstalledEmpty" Text="No loadouts yet."
+                                   Theme="{StaticResource BodyMDNormalTheme}"
+                                   Foreground="{StaticResource NeutralSubduedBrush}" />
+                        <ItemsControl x:Name="InstalledItemsControl" ItemTemplate="{StaticResource ModGroupTemplate}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</reactiveUi:ReactiveUserControl>

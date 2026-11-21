@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NexusMods.Abstractions.Games;
+using NexusMods.Sdk.Games;
 using NexusMods.Abstractions.Loadouts;
 using NexusMods.App.UI.Controls.LoadoutBadge;
 using NexusMods.App.UI.Controls.Navigation;
@@ -40,6 +41,7 @@ public class SpineViewModel : AViewModel<ISpineViewModel>, ISpineViewModel
     private readonly ILogger<SpineViewModel> _logger;
     private readonly IWindowManager _windowManager;
     private readonly ISynchronizerService _syncService;
+    private readonly IGameRegistry _gameRegistry;
 
     private ReadOnlyObservableCollection<IImageButtonViewModel> _loadoutSpineItems = new([]);
     private static readonly LoadoutSpineEntriesComparer LoadoutComparerInstance = new();
@@ -70,6 +72,7 @@ public class SpineViewModel : AViewModel<ISpineViewModel>, ISpineViewModel
         _windowManager = windowManager;
         _conn = conn;
         _syncService = serviceProvider.GetRequiredService<ISynchronizerService>();
+        _gameRegistry = serviceProvider.GetRequiredService<IGameRegistry>();
 
         // Setup the special spine items
         Home = homeButtonViewModel;
@@ -96,7 +99,8 @@ public class SpineViewModel : AViewModel<ISpineViewModel>, ISpineViewModel
                 var loadouts = Loadout.ObserveAll(_conn);
 
                 loadouts
-                    .Filter(loadout => loadout.IsVisible())
+                    // loadouts for games that are no longer installed are listed on the My Games page instead
+                    .Filter(loadout => loadout.IsVisible() && _gameRegistry.TryGetGameInstallation(loadout, out _))
                     .TransformAsync(async loadout =>
                         {
                             await using var iconStream = await loadout.InstallationInstance.Game.IconImage.GetStreamAsync();

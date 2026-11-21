@@ -44,7 +44,7 @@ public class GameLoadoutsSectionEntryViewModel : AViewModel<IGameLoadoutsSection
         HeadingText = string.Format(Language.MyLoadoutsGameSectionHeading, _gameInstallation.Game.DisplayName);
 
         Loadout.ObserveAll(conn)
-            .Filter(l => l.IsVisible() && l.InstallationInstance.Locations[LocationId.Game].Path == _gameInstallation.Locations[LocationId.Game].Path)
+            .Filter(l => l.IsVisible() && l.Installation.Path == _gameInstallation.Locations[LocationId.Game].Path.ToString()) // stored metadata path; works even if another loadout's game is uninstalled
             .Transform(loadout =>
                 {
                     return (IViewModelInterface)new LoadoutCardViewModel(loadout, conn, serviceProvider)

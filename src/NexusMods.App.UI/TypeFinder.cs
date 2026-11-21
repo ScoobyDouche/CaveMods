@@ -35,6 +35,7 @@ internal class TypeFinder : ITypeFinder
         typeof(ChangelogPageContext),
         typeof(TextEditorPageContext),
         typeof(MyLoadoutsPageContext),
+        typeof(NexusMods.App.UI.Pages.Mods.ModsPageContext),
         typeof(LoadoutGroupFilesPageContext),
         typeof(LibraryPageContext),
         typeof(LoadoutPageContext),

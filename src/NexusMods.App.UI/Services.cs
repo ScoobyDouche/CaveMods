@@ -152,6 +152,8 @@ public static class Services
             
             
             .AddView<MyLoadoutsView, IMyLoadoutsViewModel>()
+            .AddView<NexusMods.App.UI.Pages.Mods.ModsView, NexusMods.App.UI.Pages.Mods.IModsViewModel>()
+            .AddViewModel<NexusMods.App.UI.Pages.Mods.ModsViewModel, NexusMods.App.UI.Pages.Mods.IModsViewModel>()
             .AddViewModel<MyLoadoutsViewModel, IMyLoadoutsViewModel>()
             .AddView<LoadoutCardView, ILoadoutCardViewModel>()
             .AddView<CreateNewLoadoutCardView, ICreateNewLoadoutCardViewModel>()
@@ -265,6 +267,7 @@ public static class Services
             .AddSingleton<IPageFactory, ChangelogPageFactory>()
             .AddSingleton<IPageFactory, TextEditorPageFactory>()
             .AddSingleton<IPageFactory, MyLoadoutsPageFactory>()
+            .AddSingleton<IPageFactory, NexusMods.App.UI.Pages.Mods.ModsPageFactory>()
             .AddSingleton<IPageFactory, LibraryPageFactory>()
             .AddSingleton<IPageFactory, DownloadsPageFactory>()
             .AddSingleton<IPageFactory, LoadoutPageFactory>()

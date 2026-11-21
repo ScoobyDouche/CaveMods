@@ -160,7 +160,11 @@ public class MyGamesViewModel : APageViewModel<IMyGamesViewModel>, IMyGamesViewM
                             });
 
                             vm.IsManagedObservable = Loadout.ObserveAll(conn)
-                                .Filter(l => l.IsVisible() && l.InstallationInstance.Game.GameId == installation.Game.GameId && l.InstallationInstance.LocatorResult.Store == installation.LocatorResult.Store)
+                                .Filter(l => l.IsVisible()
+                                    // loadouts for games that are no longer installed have no installation
+                                    && gameRegistry.TryGetGameInstallation(l, out var loadoutInstallation)
+                                    && loadoutInstallation.Game.GameId == installation.Game.GameId
+                                    && loadoutInstallation.LocatorResult.Store == installation.LocatorResult.Store)
                                 .Count()
                                 .Select(c => c > 0);
 

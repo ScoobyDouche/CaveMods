@@ -19,6 +19,9 @@ public partial class HomeLeftMenuView : ReactiveUserControl<IHomeLeftMenuViewMod
             
             this.OneWayBind(ViewModel, vm => vm.LeftMenuItemMyLoadouts, view => view.MyLoadoutsItem.ViewModel)
                 .DisposeWith(d);
+
+            this.OneWayBind(ViewModel, vm => vm.LeftMenuItemMods, view => view.ModsItem.ViewModel)
+                .DisposeWith(d);
         });
     }
 }

@@ -21,5 +21,11 @@ public class HomeLeftMenuDesignViewModel : AViewModel<IHomeLeftMenuViewModel>, I
         Text = new StringComponent(Language.MyLoadoutsPageTitle),
         Icon = IconValues.Package,
     };
+
+    public ILeftMenuItemViewModel LeftMenuItemMods { get; } = new LeftMenuItemDesignViewModel
+    {
+        Text = new StringComponent("Mods"),
+        Icon = IconValues.ModLibrary,
+    };
     
 }

@@ -4,6 +4,7 @@ using NexusMods.App.UI.Controls;
 using NexusMods.App.UI.Controls.Navigation;
 using NexusMods.App.UI.LeftMenu.Items;
 using NexusMods.App.UI.Pages.MyGames;
+using NexusMods.App.UI.Pages.Mods;
 using NexusMods.App.UI.Pages.MyLoadouts;
 using NexusMods.App.UI.Resources;
 using NexusMods.App.UI.WorkspaceSystem;
@@ -19,6 +20,7 @@ public class HomeLeftMenuViewModel : AViewModel<IHomeLeftMenuViewModel>, IHomeLe
     public WorkspaceId WorkspaceId { get; }
     public ILeftMenuItemViewModel LeftMenuItemMyGames { get; }
     public ILeftMenuItemViewModel LeftMenuItemMyLoadouts { get; }
+    public ILeftMenuItemViewModel LeftMenuItemMods { get; }
 
     public HomeLeftMenuViewModel(
         IMyGamesViewModel myGamesViewModel,
@@ -53,6 +55,20 @@ public class HomeLeftMenuViewModel : AViewModel<IHomeLeftMenuViewModel>, IHomeLe
         {
             Text = new StringComponent(Language.MyLoadoutsPageTitle),
             Icon = IconValues.Package,
+        };
+
+        LeftMenuItemMods = new LeftMenuItemViewModel(
+            workspaceController,
+            WorkspaceId,
+            new PageData
+            {
+                FactoryId = ModsPageFactory.StaticId,
+                Context = new ModsPageContext(),
+            }
+        )
+        {
+            Text = new StringComponent("Mods"),
+            Icon = IconValues.ModLibrary,
         };
     }
 }

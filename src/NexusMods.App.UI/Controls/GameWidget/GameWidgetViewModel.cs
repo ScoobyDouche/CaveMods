@@ -48,9 +48,22 @@ public class GameWidgetViewModel : AViewModel<IGameWidgetViewModel>, IGameWidget
                     {
                         await fileHashesService.GetFileHashesDb();
                         var locatorIds = installation.LocatorResult.LocatorIds.ToArray();
-                        if (!fileHashesService.TryGetVanityVersion((installation.LocatorResult.Store, locatorIds), out var vanityVersion))
-                            return Language.GameWidget_VersionUnknown;
-                        return $"Version: {vanityVersion.Value}";
+                        if (fileHashesService.TryGetVanityVersion((installation.LocatorResult.Store, locatorIds), out var vanityVersion))
+                            return $"Version: {vanityVersion.Value}";
+
+                        // Games without file-hash coverage: read the version from the executable
+                        try
+                        {
+                            var exe = installation.Locations.ToAbsolutePath(installation.Game.GetPrimaryFile(installation));
+                            var exeVersion = await PeFileVersion.TryReadAsync(exe);
+                            if (exeVersion is not null) return $"Version: {exeVersion}";
+                        }
+                        catch (Exception)
+                        {
+                            // fall through to unknown
+                        }
+
+                        return Language.GameWidget_VersionUnknown;
                     })
                     .BindToVM(this, vm => vm.Version)
                     .DisposeWith(disposables);

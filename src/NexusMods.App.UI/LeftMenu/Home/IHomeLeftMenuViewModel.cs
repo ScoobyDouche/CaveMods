@@ -7,5 +7,7 @@ public interface IHomeLeftMenuViewModel : ILeftMenuViewModel
     public ILeftMenuItemViewModel LeftMenuItemMyGames { get; }
     
     public ILeftMenuItemViewModel LeftMenuItemMyLoadouts { get; }
+
+    public ILeftMenuItemViewModel LeftMenuItemMods { get; }
     
 }
