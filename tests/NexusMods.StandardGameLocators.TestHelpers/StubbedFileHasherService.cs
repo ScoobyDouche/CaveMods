@@ -129,6 +129,8 @@ public class StubbedFileHasherService : IFileHashesService
         {
             if (firstLocatorId == "3976631895")
                 fileIds = _versionFiles[LocatorId.From("StubbedGameState.zip")];
+            else
+                yield break; // unknown game: no file-hash coverage
         }
         
         foreach (var fileId in fileIds!)
@@ -170,7 +172,9 @@ public class StubbedFileHasherService : IFileHashesService
             return true;
         }
 
-        throw new NotSupportedException($"Unknown locator metadata: {locatorId}");
+        // Unknown game: no file-hash coverage
+        version = VanityVersion.DefaultValue;
+        return false;
     }
 
     public LocatorId[] GetLocatorIdsForVersionDefinition(GameStore gameStore, VersionDefinition.ReadOnly versionDefinition) => [];

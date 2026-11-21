@@ -130,24 +130,55 @@ internal partial class LoadoutManager : ILoadoutManager
             var remappedLoadout = result.Remap(loadout);
 
             // If there is no currently synced loadout, then we can ingest the game folder
-            if (!GameInstallMetadata.LastSyncedLoadout.TryGetValue(remappedLoadout.Installation, out var lastSyncedLoadoutId))
+            var needsIngest = !GameInstallMetadata.LastSyncedLoadout.TryGetValue(remappedLoadout.Installation, out var lastSyncedLoadoutId)
+                // the last synced loadout can be invalid if the user unmanaged the game and manages it again
+                || !Loadout.Load(remappedLoadout.Db, lastSyncedLoadoutId).IsValid();
+
+            if (needsIngest)
             {
+                await RecordLocalGameFilesIfUnknown(installation, locatorIds.ToArray());
                 await _synchronizerService.Synchronize(remappedLoadout.LoadoutId);
                 remappedLoadout = remappedLoadout.Rebase();
-            }
-            else
-            {
-                // check if the last synced loadout is valid (can apparently happen if the user unmanaged the game and manages it again)
-                var lastSyncedLoadout = Loadout.Load(remappedLoadout.Db, lastSyncedLoadoutId);
-                if (!lastSyncedLoadout.IsValid())
-                {
-                    await _synchronizerService.Synchronize(remappedLoadout.LoadoutId);
-                    remappedLoadout = remappedLoadout.Rebase();
-                }
             }
 
             return remappedLoadout;
         });
+    }
+
+    /// <summary>
+    /// Games missing from the Nexus file-hash database have no known vanilla files, so the whole
+    /// install would be ingested as External Changes (and "Clean folder" would delete the game).
+    /// For those games, record what is on disk now as the vanilla baseline.
+    /// </summary>
+    private async Task RecordLocalGameFilesIfUnknown(GameInstallation installation, LocatorId[] locatorIds)
+    {
+        if (_fileHashesService.GetGameFiles((installation.LocatorResult.Store, locatorIds)).Any()) return;
+
+        var synchronizer = installation.GetGame().Synchronizer;
+        var metadata = await synchronizer.ReindexState(installation);
+
+        using var tx = _connection.BeginTransaction();
+
+        foreach (var existing in LocalGameFile.FindByGame(metadata.Db, metadata))
+        {
+            tx.Delete(existing, recursive: false);
+        }
+
+        var count = 0;
+        foreach (var entry in DiskStateEntry.FindByGame(metadata.Db, metadata))
+        {
+            _ = new LocalGameFile.New(tx)
+            {
+                Path = entry.Path,
+                Hash = entry.Hash,
+                Size = entry.Size,
+                GameId = metadata.Id,
+            };
+            count++;
+        }
+
+        await tx.Commit();
+        _logger.LogInformation("No file hashes known for {Game}; recorded {Count} files on disk as the vanilla baseline", installation.Game.DisplayName, count);
     }
 
     private static string GetNewShortName(IDb db, GameInstallMetadataId installationId)
@@ -346,6 +377,12 @@ internal partial class LoadoutManager : ILoadoutManager
             metadata = metadata.Rebase();
 
             foreach (var entry in DiskStateEntry.FindByGame(metadata.Db, metadata))
+            {
+                tx.Delete(entry, recursive: false);
+            }
+
+            // The local vanilla baseline is re-recorded the next time the game is managed
+            foreach (var entry in LocalGameFile.FindByGame(metadata.Db, metadata))
             {
                 tx.Delete(entry, recursive: false);
             }

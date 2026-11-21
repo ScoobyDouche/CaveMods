@@ -75,6 +75,18 @@ WITH all_files AS
     0 Layer 
   FROM file_hashes.loadout_files(db)
   UNION
+  -- Locally recorded game files on Layer 0, for games the file-hash database doesn't cover
+  SELECT
+    loadout.Id Loadout,
+    NULL Id,
+    {Location: local_file.Path.Item2, Path: local_file.Path.Item3} Path,
+    local_file.Hash,
+    local_file.Size,
+    'Game'::synchronizer.ItemType ItemType,
+    0 Layer
+  FROM MDB_LOADOUT(Db=>db) loadout
+    INNER JOIN MDB_LOCALGAMEFILE(Db=>db) local_file ON local_file.Game = loadout.Installation
+  UNION
   -- Loadout files on Layer 1
   SELECT
     loadout_item.Loadout,

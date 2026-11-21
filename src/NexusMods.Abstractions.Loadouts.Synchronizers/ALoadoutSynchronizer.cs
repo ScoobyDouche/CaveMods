@@ -1356,8 +1356,31 @@ public partial class ALoadoutSynchronizer : ILoadoutSynchronizer
 
     public async Task ResetToOriginalGameState(GameInstallation installation, LocatorId[] locatorIds)
     {
-        var gameState = _fileHashService.GetGameFiles((installation.LocatorResult.Store, locatorIds));
+        var gameState = _fileHashService.GetGameFiles((installation.LocatorResult.Store, locatorIds)).ToList();
         var metadata = await ReindexState(installation);
+
+        if (gameState.Count == 0)
+        {
+            // Games without file-hash coverage use the baseline recorded when the game was first managed.
+            // Without this, an empty desired state would delete the entire game folder.
+            var localFiles = LocalGameFile.FindByGame(metadata.Db, metadata);
+            if (localFiles.Count == 0)
+            {
+                Logger.LogWarning("No known vanilla files for {Game}; leaving the game folder untouched", installation.Game.DisplayName);
+                return;
+            }
+
+            gameState = localFiles
+                .Select(file => new GameFileRecord
+                {
+                    Path = file.Path,
+                    Hash = file.Hash,
+                    Size = file.Size,
+                    // not used when resetting; only the full hash is compared against disk
+                    MinimalHash = Hash.Zero,
+                })
+                .ToList();
+        }
 
         var diskStateEntries = DiskStateEntry.FindByGame(metadata.Db, metadata);
 

@@ -11,7 +11,8 @@ public static class StubbedTestHarnessExtensions
         this IServiceCollection services,
         Version version,
         Dictionary<RelativePath, byte[]>? gameFiles = null,
-        GameStore[]? stores = null)
+        GameStore[]? stores = null,
+        LocatorId[]? locatorIds = null)
         where TGame : IGame
     {
         services
@@ -21,7 +22,10 @@ public static class StubbedTestHarnessExtensions
                     s.GetRequiredService<IFileSystem>(),
                     s.GetRequiredService<TemporaryFileManager>(),
                     gameFiles,
-                    stores));
+                    stores)
+                {
+                    LocatorIds = locatorIds ?? [LocatorId.From("StubbedGameState.zip")],
+                });
 
         return services;
     }
