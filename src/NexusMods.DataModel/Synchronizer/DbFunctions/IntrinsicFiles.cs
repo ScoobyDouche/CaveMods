@@ -62,7 +62,10 @@ public class IntrinsicFiles : ATableFunction
         var bindData = initInfo.GetBindData<BindData>();
         var db = bindData.Db;
 
+        // Skip loadouts whose game isn't registered in this build, otherwise one
+        // orphaned loadout breaks synchronizing every other loadout.
         var data = from loadout in Loadout.All(db)
+            where loadout.TryGetGame(out _)
             let game = ((IGame)loadout.Game)
             let synchronizer = (ALoadoutSynchronizer)game.Synchronizer
             from intrinsic in synchronizer.IntrinsicFiles(loadout)

@@ -98,4 +98,40 @@ public class UnhashedGameTests(ITestOutputHelper helper) : AIsolatedGameTest<Unh
         GameInstallation.Locations.ToAbsolutePath(new GamePath(LocationId.Game, VanillaFile2)).FileExists.Should().BeTrue();
         full.FileExists.Should().BeFalse("files added while managed are removed when resetting to the original state");
     }
+
+    [Fact]
+    public async Task DiagnosticsCanReadVanillaFiles()
+    {
+        // e.g. the Gamebryo missing-master check reads vanilla .esm files through GameFileStreamSource
+        var loadout = await CreateLoadout();
+
+        var entry = DiskStateEntry.All(Connection.Db)
+            .First(e => e.GameId == loadout.InstallationId && e.Path.Item3 == VanillaFile2);
+        var source = ServiceProvider.GetServices<NexusMods.Sdk.FileStore.IReadOnlyStreamSource>()
+            .OfType<GameFileStreamSource>().Single();
+
+        source.Resolve(entry.Hash).Should().Be(
+            GameInstallation.Locations.ToAbsolutePath(new GamePath(LocationId.Game, VanillaFile2)));
+    }
+
+    [Fact]
+    public async Task DiagnosticsCanReadVanillaFilesBeforeFirstSync()
+    {
+        var loadout = await CreateLoadout();
+        using (var tx = Connection.BeginTransaction())
+        {
+            // an install that was indexed but never synced has no LastSyncedLoadout
+            var metadata = GameInstallMetadata.Load(Connection.Db, loadout.InstallationId);
+            tx.Retract(metadata, GameInstallMetadata.LastSyncedLoadoutId, metadata.LastSyncedLoadoutId.Value);
+            await tx.Commit();
+        }
+
+        var entry = DiskStateEntry.All(Connection.Db)
+            .First(e => e.GameId == loadout.InstallationId && e.Path.Item3 == VanillaFile2);
+        var source = ServiceProvider.GetServices<NexusMods.Sdk.FileStore.IReadOnlyStreamSource>()
+            .OfType<GameFileStreamSource>().Single();
+
+        source.Resolve(entry.Hash).Should().Be(
+            GameInstallation.Locations.ToAbsolutePath(new GamePath(LocationId.Game, VanillaFile2)));
+    }
 }

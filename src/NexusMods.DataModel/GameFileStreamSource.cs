@@ -40,12 +40,15 @@ public class GameFileStreamSource : IReadOnlyStreamSource
     public AbsolutePath? Resolve(Hash hash)
     {
         var options = _conn.Query<(EntityId Game, LocationId Location, RelativePath Path, DateTimeOffset LastModified, Hash Hash, Size Size)>(
-            $"select Game, Path.Item1, Path.Item2, Path.Item3, LastModified, Hash, Size from mdb_DiskStateEntry(Db=>{_conn}) WHERE Hash = {hash} ORDER BY LastModified DESC");
+            $"select Game, Path.Item2, Path.Item3, LastModified, Hash, Size from mdb_DiskStateEntry(Db=>{_conn}) WHERE Hash = {hash} ORDER BY LastModified DESC");
         foreach (var option in options)
         {
             var metadata = GameInstallMetadata.Load(_conn.Db, option.Game);
             if (!metadata.IsValid()) continue;
-            if (!_gameRegistry.TryGetGameInstallation(metadata.LastSyncedLoadout, out var installation)) continue;
+            // Match on the metadata directly: LastSyncedLoadout is optional and unset until the first sync
+            var installation = _gameRegistry.LocateGameInstallations()
+                .FirstOrDefault(i => i.Game.NexusModsGameId == metadata.GameId && i.LocatorResult.Store == metadata.Store);
+            if (installation is null) continue;
 
             var resolvedPath = installation.Locations.ToAbsolutePath(new GamePath(option.Location, option.Path));
             if (!resolvedPath.FileExists) continue;

@@ -81,6 +81,18 @@ public partial class Loadout : IModelDefinition
         }
 
         /// <summary>
+        /// Gets the game for this loadout, or false if this build doesn't register it
+        /// (e.g. a loadout created by a build that supported more games).
+        /// </summary>
+        public bool TryGetGame([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out IGameData? game)
+        {
+            var gameId = Installation.GameId;
+            game = Db.Connection.ServiceProvider.GetServices<IGameData>()
+                .FirstOrDefault(g => g.NexusModsGameId == gameId);
+            return game is not null;
+        }
+
+        /// <summary>
         /// Get the game installation for this loadout.
         /// </summary>
         public GameInstallation InstallationInstance
